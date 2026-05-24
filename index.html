@@ -123,9 +123,10 @@
     #quote-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,.45);
-      display: flex; align-items: center; justify-content: center;
+      align-items: center; justify-content: center;
       z-index: 50; padding: 16px;
     }
+    #quote-overlay.open { display: flex; }
     #quote-modal {
       background: #fff;
       border-radius: 16px;
@@ -297,7 +298,7 @@
 <!-- ════════════════════════════════════════════════
      QUOTE MODAL
 ════════════════════════════════════════════════ -->
-<div id="quote-overlay" class="hidden no-print" onclick="handleOverlayClick(event)">
+<div id="quote-overlay" class="no-print" onclick="handleOverlayClick(event)">
   <div id="quote-modal">
     <div id="quote-print-area" class="p-8"></div>
     <div class="flex flex-wrap gap-3 px-8 py-5 border-t no-print" style="border-color:rgba(0,0,0,0.08);">
@@ -641,10 +642,10 @@ function generateQuote() {
 
   </div>`;
 
-  document.getElementById('quote-overlay').classList.remove('hidden');
+  document.getElementById('quote-overlay').classList.add('open');
 }
 
-function closeQuote() { document.getElementById('quote-overlay').classList.add('hidden'); }
+function closeQuote() { document.getElementById('quote-overlay').classList.remove('open'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('quote-overlay')) closeQuote(); }
 function printQuote() { window.print(); }
 
