@@ -136,19 +136,7 @@
       max-height: 92vh; overflow-y: auto;
     }
 
-    /* ── Print ── */
-    @media print {
-      body * { visibility: hidden !important; }
-      #quote-overlay { display: block !important; }
-      #quote-modal { box-shadow: none !important; max-height: none !important; overflow: visible !important; }
-      #quote-print-area, #quote-print-area * { visibility: visible !important; }
-      #quote-print-area {
-        position: fixed; inset: 0;
-        width: 100%; padding: 32px;
-        background: white;
-      }
-      .no-print { display: none !important; }
-    }
+    /* ── Print handled via popup window — no @media print needed ── */
   </style>
 </head>
 
@@ -650,7 +638,29 @@ function generateQuote() {
 
 function closeQuote() { document.getElementById('quote-overlay').classList.remove('open'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('quote-overlay')) closeQuote(); }
-function printQuote() { window.print(); }
+
+function printQuote() {
+  const content = document.getElementById('quote-print-area').innerHTML;
+  const win = window.open('', '_blank', 'width=820,height=700');
+  win.document.write(`<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ใบเสนอราคา — ACService</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; padding: 40px; color: #1A1A1A; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    table { width: 100%; border-collapse: collapse; }
+    @media print { body { padding: 24px; } }
+  </style>
+</head>
+<body>${content}</body>
+</html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 800);
+}
 
 function resetForm() {
   if (!confirm('ต้องการรีเซ็ตข้อมูลทั้งหมดใช่ไหม?')) return;
