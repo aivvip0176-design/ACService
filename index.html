@@ -31,6 +31,8 @@
     body {
       font-family: var(--font);
       background: var(--navy-50);
+      background-image: radial-gradient(circle, #C8D9F0 1px, transparent 1px);
+      background-size: 28px 28px;
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
@@ -105,27 +107,83 @@
     }
     .refresh-btn:hover { background: rgba(255,255,255,.14); }
 
-    /* ─── PAGE HERO (slim) ─── */
+    /* ─── PAGE HERO ─── */
     .page-hero {
-      background: linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
-      padding: 40px 32px 56px;
+      background: linear-gradient(135deg, var(--navy-800) 0%, #0D2550 60%, var(--navy-900) 100%);
+      padding: 0 32px 60px;
+      overflow: hidden;
+      position: relative;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.03);
+      pointer-events: none;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 10%;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(59,107,201,.12);
+      pointer-events: none;
     }
     .page-hero-inner {
       max-width: 1100px;
       margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+    }
+    .hero-text {
+      flex: 1;
+      min-width: 0;
+      padding: 48px 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 100px;
+      padding: 4px 13px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,.65);
+      letter-spacing: .05em;
     }
     .page-hero h1 {
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 700;
       color: #fff;
-      letter-spacing: -.02em;
-      margin-bottom: 6px;
+      letter-spacing: -.025em;
+      line-height: 1.15;
+      margin-bottom: 10px;
     }
-    .page-hero p {
+    .hero-sub {
       font-size: 14px;
-      color: rgba(255,255,255,.5);
+      color: rgba(255,255,255,.45);
       font-weight: 400;
+      line-height: 1.65;
     }
+    .hero-art {
+      flex-shrink: 0;
+      width: 300px;
+      height: 210px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-art svg { width: 100%; height: 100%; }
 
     /* ─── MAIN ─── */
     .page-main {
@@ -144,8 +202,10 @@
       .layout { grid-template-columns: 1fr; }
       .page-main { padding: 0 16px 48px; }
       .topbar { padding: 0 16px; }
-      .page-hero { padding: 28px 16px 48px; }
-      .page-hero h1 { font-size: 22px; }
+      .page-hero { padding: 0 16px 52px; }
+      .page-hero h1 { font-size: 24px; }
+      .hero-text { padding: 32px 0 12px; }
+      .hero-art { display: none; }
     }
 
     /* ─── CARD ─── */
@@ -510,8 +570,208 @@
 <!-- ══════════════════════ HERO ══════════════════════ -->
 <div class="page-hero">
   <div class="page-hero-inner">
-    <h1>คำนวณค่าบริการแอร์</h1>
-    <p>เลือกบริการ · กรอกข้อมูลลูกค้า · ออกใบเสนอราคาพร้อมพิมพ์</p>
+
+    <!-- Text -->
+    <div class="hero-text">
+      <div class="hero-badges">
+        <span class="hero-badge">ล้างแอร์</span>
+        <span class="hero-badge">ซ่อมแอร์</span>
+        <span class="hero-badge">ติดตั้งแอร์</span>
+      </div>
+      <h1>คำนวณค่าบริการแอร์</h1>
+      <p class="hero-sub">เลือกบริการ · กรอกข้อมูลลูกค้า<br>ออกใบเสนอราคาพร้อมพิมพ์</p>
+    </div>
+
+    <!-- Illustration -->
+    <div class="hero-art">
+      <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background decoration circles -->
+        <circle cx="30" cy="175" r="55" fill="rgba(255,255,255,0.025)"/>
+        <circle cx="250" cy="40" r="38" fill="rgba(255,255,255,0.035)"/>
+        <circle cx="150" cy="200" r="30" fill="rgba(59,107,201,0.12)"/>
+
+        <!-- ═══ WALL AC UNIT ═══ -->
+        <!-- Drop shadow -->
+        <rect x="10" y="9" width="178" height="68" rx="12" fill="rgba(0,0,0,0.22)"/>
+        <!-- Main body -->
+        <rect x="8" y="6" width="178" height="68" rx="12" fill="#E8F1FF" stroke="#BDD0F0" stroke-width="1.5"/>
+        <!-- Top dark band -->
+        <rect x="8" y="6" width="178" height="24" rx="12" fill="#1B3A6B"/>
+        <rect x="8" y="18" width="178" height="12" fill="#1B3A6B"/>
+        <!-- Display screen -->
+        <rect x="18" y="10" width="54" height="15" rx="3.5" fill="#0B1F45"/>
+        <text x="45" y="21" fill="#7EB3FF" font-size="9" text-anchor="middle" font-family="monospace" font-weight="700">22 °C</text>
+        <!-- Brand zone -->
+        <rect x="82" y="11" width="62" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+        <text x="113" y="20" fill="rgba(255,255,255,0.35)" font-size="6" text-anchor="middle" letter-spacing="2">AC · SERVICE</text>
+        <!-- LED indicators -->
+        <circle cx="156" cy="18" r="3.5" fill="#4CAF50"/>
+        <circle cx="166" cy="18" r="3.5" fill="#7EB3FF" opacity="0.35"/>
+        <circle cx="176" cy="18" r="3.5" fill="rgba(255,255,255,0.18)"/>
+        <!-- Vent slats -->
+        <rect x="10" y="36" width="174" height="2.5" rx="1.25" fill="#C5D8F5"/>
+        <rect x="10" y="45" width="174" height="2.5" rx="1.25" fill="#C5D8F5"/>
+        <rect x="10" y="54" width="174" height="2.5" rx="1.25" fill="#C5D8F5"/>
+        <rect x="10" y="63" width="174" height="2.5" rx="1.25" fill="#C5D8F5"/>
+        <!-- Bottom louver -->
+        <rect x="10" y="68" width="174" height="8" rx="4" fill="#3B6BC9" opacity="0.45"/>
+        <!-- Mounting brackets -->
+        <rect x="0" y="22" width="9" height="30" rx="3" fill="#1B3A6B" opacity="0.35"/>
+        <rect x="189" y="22" width="9" height="30" rx="3" fill="#1B3A6B" opacity="0.35"/>
+        <!-- Mounting screws -->
+        <circle cx="4.5" cy="28" r="3" fill="#234EA0" opacity="0.5"/>
+        <circle cx="4.5" cy="46" r="3" fill="#234EA0" opacity="0.5"/>
+        <circle cx="193.5" cy="28" r="3" fill="#234EA0" opacity="0.5"/>
+        <circle cx="193.5" cy="46" r="3" fill="#234EA0" opacity="0.5"/>
+
+        <!-- Air flow lines below unit -->
+        <path d="M 50 80 Q 53 88 50 96" stroke="#7EB3FF" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.55"/>
+        <path d="M 62 78 Q 65 86 62 94" stroke="#7EB3FF" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.45"/>
+        <path d="M 74 80 Q 77 88 74 96" stroke="#7EB3FF" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.35"/>
+        <path d="M 86 78 Q 89 86 86 94" stroke="#7EB3FF" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.25"/>
+
+        <!-- ★ Sparkles (fixing effect near right of AC) -->
+        <g transform="translate(152,80)" opacity="0.9">
+          <line x1="0" y1="-6" x2="0" y2="-11" stroke="#FFD566" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="5" y1="-3" x2="9" y2="-5.5" stroke="#FFD566" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="5" y1="3" x2="9" y2="5.5" stroke="#FFD566" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="-5" y1="-3" x2="-9" y2="-5.5" stroke="#FFD566" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="0" cy="0" r="3" fill="#FFD566"/>
+        </g>
+        <!-- Small star -->
+        <g transform="translate(168,73)" opacity="0.6">
+          <line x1="0" y1="-4" x2="0" y2="-7" stroke="#FFD566" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="3.5" y1="2" x2="6" y2="3.5" stroke="#FFD566" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="-3.5" y1="2" x2="-6" y2="3.5" stroke="#FFD566" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="0" cy="0" r="2" fill="#FFD566"/>
+        </g>
+
+        <!-- ═══ TECHNICIAN ═══ -->
+        <!-- Ground shadow -->
+        <ellipse cx="234" cy="203" rx="30" ry="6" fill="rgba(0,0,0,0.18)"/>
+
+        <!-- Shoes -->
+        <ellipse cx="222" cy="200" rx="14" ry="7" fill="#0B1F45"/>
+        <ellipse cx="247" cy="200" rx="12" ry="6" fill="#0B1F45"/>
+        <!-- Shoe highlight -->
+        <ellipse cx="219" cy="197" rx="7" ry="2.5" fill="rgba(255,255,255,0.07)"/>
+
+        <!-- Pants / Legs -->
+        <rect x="216" y="168" width="13" height="35" rx="6.5" fill="#1B3A6B"/>
+        <rect x="236" y="168" width="13" height="35" rx="6.5" fill="#1B3A6B"/>
+        <!-- Pants crease (detail) -->
+        <line x1="222" y1="172" x2="222" y2="198" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+        <line x1="242" y1="172" x2="242" y2="198" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+        <!-- Belt -->
+        <rect x="214" y="165" width="50" height="7" rx="3.5" fill="#0A1930"/>
+        <!-- Belt buckle -->
+        <rect x="230" y="163" width="10" height="11" rx="2.5" fill="#8E9BB5"/>
+        <rect x="232" y="165" width="6" height="7" rx="1.5" fill="#B0BCDA"/>
+
+        <!-- Uniform body -->
+        <rect x="213" y="122" width="50" height="48" rx="12" fill="#234EA0"/>
+        <!-- Uniform shadow/depth -->
+        <rect x="213" y="122" width="50" height="8" rx="12" fill="rgba(0,0,0,0.1)"/>
+        <!-- Collar V-neck -->
+        <polygon points="238,122 231,138 245,138" fill="#3B6BC9"/>
+        <!-- Left chest pocket -->
+        <rect x="218" y="142" width="14" height="12" rx="3" fill="#1B3A6B"/>
+        <line x1="218" y1="147" x2="232" y2="147" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <!-- Right pocket -->
+        <rect x="244" y="150" width="12" height="10" rx="3" fill="#1B3A6B"/>
+        <!-- Uniform stripe / trim on shoulders -->
+        <rect x="213" y="127" width="7" height="24" rx="3.5" fill="#1B3A6B"/>
+        <rect x="256" y="127" width="7" height="24" rx="3.5" fill="#1B3A6B"/>
+
+        <!-- RIGHT ARM (relaxed, down) -->
+        <path d="M 260 136 Q 268 155 265 175" stroke="#234EA0" stroke-width="13" stroke-linecap="round" fill="none"/>
+        <path d="M 260 136 Q 268 155 265 175" stroke="rgba(255,255,255,0.06)" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- Right hand -->
+        <circle cx="264" cy="183" r="9" fill="#F5C5A0"/>
+
+        <!-- LEFT ARM (raised up-left toward AC unit) -->
+        <path d="M 215 134 Q 198 116 175 94" stroke="#234EA0" stroke-width="13" stroke-linecap="round" fill="none"/>
+        <path d="M 215 134 Q 198 116 175 94" stroke="rgba(255,255,255,0.06)" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- Left hand -->
+        <circle cx="171" cy="91" r="9" fill="#F5C5A0"/>
+
+        <!-- WRENCH in left hand -->
+        <g transform="translate(160,56) rotate(10)">
+          <!-- Handle -->
+          <rect x="-3.5" y="14" width="7" height="26" rx="3.5" fill="#8E9BB5"/>
+          <!-- Handle grip texture -->
+          <rect x="-2" y="20" width="4" height="3" rx="1" fill="rgba(0,0,0,0.15)"/>
+          <rect x="-2" y="26" width="4" height="3" rx="1" fill="rgba(0,0,0,0.15)"/>
+          <rect x="-2" y="32" width="4" height="3" rx="1" fill="rgba(0,0,0,0.15)"/>
+          <!-- Wrench head -->
+          <path d="M -9 13 Q -10 -2 0 -4 Q 10 -2 9 13 Z" fill="#8E9BB5"/>
+          <!-- Wrench jaw opening -->
+          <ellipse cx="0" cy="5" rx="4.5" ry="5.5" fill="#1B3A6B"/>
+          <!-- Metal shine -->
+          <rect x="-1" y="15" width="3" height="18" rx="1.5" fill="#B8C8E0" opacity="0.55"/>
+        </g>
+
+        <!-- Neck -->
+        <rect x="230" y="113" width="16" height="13" rx="6" fill="#F5C5A0"/>
+
+        <!-- Head -->
+        <circle cx="238" cy="97" r="22" fill="#F5C5A0"/>
+        <!-- Head side shade -->
+        <path d="M 216 97 Q 216 86 226 82" stroke="rgba(200,140,100,0.3)" stroke-width="3" fill="none"/>
+
+        <!-- Helmet / Cap -->
+        <path d="M 217 96 Q 217 74 238 73 Q 259 74 259 96" fill="#3B6BC9"/>
+        <!-- Cap brim -->
+        <rect x="215" y="93" width="46" height="9" rx="4.5" fill="#234EA0"/>
+        <!-- Cap front panel -->
+        <rect x="228" y="93" width="20" height="7" rx="2.5" fill="#3B6BC9" opacity="0.7"/>
+        <!-- Cap logo badge -->
+        <text x="238" y="99" fill="rgba(255,255,255,0.75)" font-size="5" text-anchor="middle" font-family="sans-serif" font-weight="700">AC</text>
+        <!-- Cap seam line -->
+        <line x1="238" y1="73" x2="238" y2="93" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+        <!-- Hair visible at sides -->
+        <path d="M 217 95 Q 216 87 220 83" stroke="#1B3A6B" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M 259 95 Q 260 87 256 83" stroke="#1B3A6B" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+        <!-- Eyes (looking upper-left toward AC) -->
+        <circle cx="230" cy="100" r="4.5" fill="white"/>
+        <circle cx="246" cy="100" r="4.5" fill="white"/>
+        <!-- Pupils (shifted left-up) -->
+        <circle cx="228.5" cy="99" r="2.8" fill="#1B3A6B"/>
+        <circle cx="244.5" cy="99" r="2.8" fill="#1B3A6B"/>
+        <!-- Eye shine dots -->
+        <circle cx="229.2" cy="98.2" r="1.1" fill="white"/>
+        <circle cx="245.2" cy="98.2" r="1.1" fill="white"/>
+        <!-- Eyebrows (raised — focused expression) -->
+        <path d="M 225 95 Q 230 92.5 235 95" stroke="#1B3A6B" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M 241 95 Q 246 92.5 251 95" stroke="#1B3A6B" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Smile -->
+        <path d="M 228 109 Q 238 115 248 109" stroke="#CC8866" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <!-- Cheek blush -->
+        <ellipse cx="224" cy="107" rx="4.5" ry="3" fill="#F48C8C" opacity="0.35"/>
+        <ellipse cx="252" cy="107" rx="4.5" ry="3" fill="#F48C8C" opacity="0.35"/>
+
+        <!-- Sweat drop (working hard) -->
+        <path d="M 256 88 L 260 80 L 264 88 Q 264 93 260 93 Q 256 93 256 88 Z" fill="#7EB3FF" opacity="0.6"/>
+
+        <!-- TOOLBOX at right -->
+        <rect x="268" y="186" width="28" height="16" rx="5" fill="#1B3A6B"/>
+        <rect x="268" y="181" width="28" height="10" rx="4" fill="#234EA0"/>
+        <!-- Toolbox handle -->
+        <path d="M 277 181 Q 277 175 282 175 Q 287 175 287 181" stroke="#3B6BC9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Clasps -->
+        <rect x="273" y="184" width="6" height="4" rx="1.5" fill="#3B6BC9"/>
+        <rect x="285" y="184" width="6" height="4" rx="1.5" fill="#3B6BC9"/>
+        <!-- Tool handle sticking out -->
+        <rect x="290" y="172" width="5" height="14" rx="2.5" fill="#7A8EAE"/>
+        <circle cx="292.5" cy="171" r="4.5" fill="#7A8EAE"/>
+        <circle cx="292.5" cy="171" r="2" fill="#B0BCDA"/>
+
+      </svg>
+    </div>
+
   </div>
 </div>
 
