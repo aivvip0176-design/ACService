@@ -518,6 +518,27 @@ const SVC_MAP = {
   install:'install','ติดตั้ง':'install','ติดตั้งแอร์':'install',
 };
 
+/* ── FALLBACK prices (used when Sheet is unavailable) ── */
+const FALLBACK_SIZES = { '9000':500, '12000':600, '18000':800, '24000':1000 };
+const FALLBACK_SIZE_LABELS = {
+  '9000':'9,000 BTU','12000':'12,000 BTU','18000':'18,000 BTU','24000':'24,000 BTU'
+};
+const FALLBACK_RATES = {
+  wash:    { sizes:{ '9000':500,  '12000':600,  '18000':800,  '24000':1000 } },
+  repair:  { sizes:{ '9000':1200, '12000':1500, '18000':2000, '24000':2500 } },
+  install: { sizes:{ '9000':2500, '12000':3000, '18000':4000, '24000':5000 } },
+};
+
+function applyFallback() {
+  SIZE_LABELS = { ...FALLBACK_SIZE_LABELS };
+  Object.keys(RATES).forEach(k => RATES[k].sizes = { ...FALLBACK_RATES[k].sizes });
+  document.querySelectorAll('[id^="row"]').forEach(rowEl => {
+    const id = rowEl.id;
+    if (document.getElementById('svc-' + id)?.value) onTypeChange(id, true);
+  });
+  updateSummary();
+}
+
 let RATES = {
   wash:    { label:'ล้างแอร์',     sizes:{} },
   repair:  { label:'ซ่อมแอร์',    sizes:{} },
@@ -542,6 +563,7 @@ async function loadPrices() {
     setStatus('ok');
   } catch(e) {
     console.warn('[ACService] Sheet:', e.message);
+    applyFallback();
     setStatus('error');
   }
 }
@@ -658,8 +680,11 @@ function onTypeChange(id,keep=false){
     });
     if(prev) szEl.value=prev;
   } else if(type){
+    /* sizes not loaded yet — show loading state but keep enabled */
     szEl.disabled=false;
-    szEl.innerHTML='<option value="">กำลังโหลดราคา...</option>';
+    const o=document.createElement('option');
+    o.value=''; o.textContent='กำลังโหลดราคา...';
+    szEl.appendChild(o);
   } else {
     szEl.disabled=true;
   }
