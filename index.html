@@ -641,25 +641,37 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('quote
 
 function printQuote() {
   const content = document.getElementById('quote-print-area').innerHTML;
-  const win = window.open('', '_blank', 'width=820,height=700');
-  win.document.write(`<!DOCTYPE html>
+
+  /* reuse or create hidden iframe */
+  let frame = document.getElementById('print-frame');
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.id = 'print-frame';
+    frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none;visibility:hidden;';
+    document.body.appendChild(frame);
+  }
+
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  doc.open();
+  doc.write(`<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <title>ใบเสนอราคา — ACService</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, sans-serif; padding: 40px; color: #1A1A1A; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    *  { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; padding: 36px; color: #1A1A1A;
+           -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     table { width: 100%; border-collapse: collapse; }
-    @media print { body { padding: 24px; } }
   </style>
 </head>
 <body>${content}</body>
 </html>`);
-  win.document.close();
-  win.focus();
-  setTimeout(() => { win.print(); }, 800);
+  doc.close();
+
+  /* wait for font then print */
+  setTimeout(() => { frame.contentWindow.focus(); frame.contentWindow.print(); }, 900);
 }
 
 function resetForm() {
