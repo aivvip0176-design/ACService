@@ -621,8 +621,9 @@ function setStatus(state){
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('svc-date').value=new Date().toISOString().slice(0,10);
+  applyFallback(); // ใช้ราคาสำรองทันที ให้ dropdown ใช้งานได้เสมอ
   addItem();
-  loadPrices();
+  loadPrices();   // ดึงราคาจาก Sheet และ override ถ้าสำเร็จ
 });
 
 /* ── ITEMS ── */
