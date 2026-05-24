@@ -139,6 +139,8 @@
     /* ── Print ── */
     @media print {
       body * { visibility: hidden !important; }
+      #quote-overlay { display: block !important; }
+      #quote-modal { box-shadow: none !important; max-height: none !important; overflow: visible !important; }
       #quote-print-area, #quote-print-area * { visibility: visible !important; }
       #quote-print-area {
         position: fixed; inset: 0;
