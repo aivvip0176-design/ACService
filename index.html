@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACService — ระบบคำนวณค่าบริการแอร์</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas:  'rgb(249, 249, 247)',
+            ink:     '#1A1A1A',
+            muted:   '#888780',
+            accent:  '#F1EFE8',
+            border:  'rgba(0,0,0,0.12)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Base ── */
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: rgb(249, 249, 247);
+      -webkit-font-smoothing: antialiased;
+      color: #1A1A1A;
+    }
+
+    /* ── Inputs & Selects ── */
+    .field {
+      width: 100%;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1A1A1A;
+      outline: none;
+      transition: box-shadow .15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field::placeholder { color: #888780; }
+    .field:focus { box-shadow: 0 0 0 2px #1A1A1A; }
+    .field:disabled { background: rgb(249,249,247); cursor: not-allowed; }
+
+    select.field {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    textarea.field { resize: vertical; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: #1A1A1A; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 10px 32px;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: opacity .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { opacity: .82; }
+    .btn-primary:focus { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+
+    .btn-secondary {
+      background: #fff; color: #1A1A1A;
+      border: 1px solid rgba(0,0,0,0.12); border-radius: 8px;
+      padding: 10px 24px;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: background .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { background: #F1EFE8; }
+    .btn-secondary:focus { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.10);
+      padding: 24px;
+    }
+    .card-dashed {
+      background: transparent;
+      border: 1px dashed rgba(0,0,0,.15);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    /* ── Service row ── */
+    .service-row {
+      background: rgb(249,249,247);
+      border: 1px dashed rgba(0,0,0,.10);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    /* ── Labels ── */
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1A1A1A;
+      margin-bottom: 6px;
+    }
+
+    /* ── Modal overlay ── */
+    #quote-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 50; padding: 16px;
+    }
+    #quote-modal {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+      max-width: 700px; width: 100%;
+      max-height: 92vh; overflow-y: auto;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body * { visibility: hidden !important; }
+      #quote-print-area, #quote-print-area * { visibility: visible !important; }
+      #quote-print-area {
+        position: fixed; inset: 0;
+        width: 100%; padding: 32px;
+        background: white;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- ════════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════ -->
+<div class="max-w-6xl mx-auto px-4 py-10">
+
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex items-center gap-3 mb-1">
+      <!-- AC icon -->
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="9" rx="2"/>
+        <path d="M12 12v9M9 21h6"/>
+        <circle cx="6.5" cy="7.5" r=".8" fill="#1A1A1A"/>
+        <circle cx="9.5" cy="7.5" r=".8" fill="#1A1A1A"/>
+      </svg>
+      <h1 style="font-size:23px;font-weight:600;color:#1A1A1A;">ACService</h1>
+    </div>
+    <p style="font-size:14px;color:#888780;">ระบบคำนวณค่าบริการแอร์ — ล้าง &middot; ซ่อม &middot; ติดตั้ง</p>
+  </header>
+
+  <!-- Grid: Form (3) + Summary (2) -->
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+
+    <!-- ── FORM COLUMN ── -->
+    <div class="lg:col-span-3 space-y-5 no-print">
+
+      <!-- 1. Service Items -->
+      <div class="card">
+        <div class="flex items-center gap-2 mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18M9 21V9"/>
+          </svg>
+          <h2 style="font-size:18px;font-weight:600;">รายการบริการ</h2>
+        </div>
+
+        <div id="items-wrap" class="space-y-3"></div>
+
+        <button onclick="addItem()" class="btn-secondary mt-4 w-full justify-center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          เพิ่มรายการ
+        </button>
+      </div>
+
+      <!-- 2. Distance -->
+      <div class="card">
+        <div class="flex items-center gap-2 mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <h2 style="font-size:18px;font-weight:600;">ระยะทางและค่าเดินทาง</h2>
+        </div>
+        <label for="distance">ระยะทาง</label>
+        <select id="distance" class="field" onchange="updateSummary()">
+          <option value="">— เลือกระยะทาง —</option>
+          <option value="100">0 – 10 กม.&nbsp;&nbsp;(ค่าเดินทาง ฿100)</option>
+          <option value="200">11 – 20 กม.&nbsp;(ค่าเดินทาง ฿200)</option>
+          <option value="300">21 – 30 กม.&nbsp;(ค่าเดินทาง ฿300)</option>
+          <option value="500">31 – 50 กม.&nbsp;(ค่าเดินทาง ฿500)</option>
+          <option value="800">51 กม. ขึ้นไป (ค่าเดินทาง ฿800)</option>
+        </select>
+      </div>
+
+      <!-- 3. Customer Info -->
+      <div class="card">
+        <div class="flex items-center gap-2 mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <h2 style="font-size:18px;font-weight:600;">ข้อมูลลูกค้า</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="cust-name">ชื่อ–นามสกุล <span style="color:#888780;font-weight:400;">*</span></label>
+            <input id="cust-name" type="text" class="field" placeholder="กรอกชื่อ–นามสกุล" oninput="updateSummary()">
+          </div>
+          <div>
+            <label for="cust-phone">เบอร์โทรศัพท์ <span style="color:#888780;font-weight:400;">*</span></label>
+            <input id="cust-phone" type="tel" class="field" placeholder="0XX-XXX-XXXX" oninput="updateSummary()">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="cust-addr">ที่อยู่ให้บริการ</label>
+            <textarea id="cust-addr" class="field" rows="2" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด" oninput="updateSummary()"></textarea>
+          </div>
+          <div>
+            <label for="svc-date">วันที่นัดหมาย</label>
+            <input id="svc-date" type="date" class="field" oninput="updateSummary()">
+          </div>
+          <div>
+            <label for="svc-time">เวลานัดหมาย</label>
+            <input id="svc-time" type="time" class="field" oninput="updateSummary()">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="notes">หมายเหตุ</label>
+            <textarea id="notes" class="field" rows="2" placeholder="รายละเอียดเพิ่มเติม หรือข้อมูลอื่นๆ" oninput="updateSummary()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-wrap gap-3">
+        <button onclick="generateQuote()" class="btn-primary flex-1 justify-center" style="min-width:200px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          คำนวณและออกใบเสนอราคา
+        </button>
+        <button onclick="resetForm()" class="btn-secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-3.7"/>
+          </svg>
+          รีเซ็ต
+        </button>
+      </div>
+
+    </div><!-- /form col -->
+
+    <!-- ── SUMMARY SIDEBAR ── -->
+    <div class="lg:col-span-2 no-print">
+      <div id="summary-panel" class="card-dashed lg:sticky lg:top-6">
+        <div id="summary-empty" class="py-6 flex flex-col items-center gap-3">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#888780" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="9" rx="2"/>
+            <path d="M12 12v9M9 21h6"/>
+          </svg>
+          <p style="font-size:14px;color:#888780;text-align:center;">กรอกข้อมูลเพื่อดูสรุปค่าบริการ</p>
+        </div>
+        <div id="summary-content" class="hidden"></div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</div><!-- /shell -->
+
+
+<!-- ════════════════════════════════════════════════
+     QUOTE MODAL
+════════════════════════════════════════════════ -->
+<div id="quote-overlay" class="hidden no-print" onclick="handleOverlayClick(event)">
+  <div id="quote-modal">
+    <div id="quote-print-area" class="p-8"></div>
+    <div class="flex flex-wrap gap-3 px-8 py-5 border-t no-print" style="border-color:rgba(0,0,0,0.08);">
+      <button onclick="printQuote()" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        พิมพ์ใบเสนอราคา
+      </button>
+      <button onclick="closeQuote()" class="btn-secondary">ปิด</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     SCRIPT
+════════════════════════════════════════════════ -->
+<script>
+/* ─── RATES ─────────────────────────────────── */
+const RATES = {
+  wash:    { label: 'ล้างแอร์',     sizes: { '9000':500,  '12000':600,  '18000':800,  '24000':1000 } },
+  repair:  { label: 'ซ่อมแอร์',    sizes: { '9000':1200, '12000':1500, '18000':2000, '24000':2500 } },
+  install: { label: 'ติดตั้งแอร์', sizes: { '9000':2500, '12000':3000, '18000':4000, '24000':5000 } },
+};
+const SIZE_LABELS = {
+  '9000':  '9,000 BTU (เล็ก)',
+  '12000': '12,000 BTU (กลาง)',
+  '18000': '18,000 BTU (ใหญ่)',
+  '24000': '24,000 BTU (ใหญ่พิเศษ)',
+};
+const DIST_LABELS = {
+  '100': '0–10 กม.',
+  '200': '11–20 กม.',
+  '300': '21–30 กม.',
+  '500': '31–50 กม.',
+  '800': '51 กม. ขึ้นไป',
+};
+
+/* ─── STATE ──────────────────────────────────── */
+let seq = 0;
+
+/* ─── INIT ───────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  addItem();
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('svc-date').value = today;
+});
+
+/* ─── ADD / REMOVE ITEM ──────────────────────── */
+function addItem() {
+  seq++;
+  const id = `row${seq}`;
+  const wrap = document.getElementById('items-wrap');
+
+  const div = document.createElement('div');
+  div.id = id;
+  div.className = 'service-row';
+  div.innerHTML = `
+    <div class="flex items-center justify-between mb-3">
+      <span style="font-size:13px;font-weight:500;color:#888780;">รายการที่ ${seq}</span>
+      ${seq > 1
+        ? `<button onclick="removeItem('${id}')" style="font-size:12px;color:#888780;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
+             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>ลบ
+           </button>`
+        : ''}
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div>
+        <label>ประเภทบริการ</label>
+        <select class="field" id="svc-${id}" onchange="onTypeChange('${id}')">
+          <option value="">— เลือกประเภท —</option>
+          <option value="wash">ล้างแอร์</option>
+          <option value="repair">ซ่อมแอร์</option>
+          <option value="install">ติดตั้งแอร์</option>
+        </select>
+      </div>
+      <div>
+        <label>ขนาดแอร์</label>
+        <select class="field" id="sz-${id}" onchange="updateSummary()" disabled>
+          <option value="">— เลือกขนาด —</option>
+        </select>
+      </div>
+      <div>
+        <label>จำนวน</label>
+        <input type="number" class="field" id="qty-${id}" value="1" min="1" max="99"
+               style="text-align:center;" oninput="updateSummary()">
+      </div>
+    </div>
+    <div id="line-${id}" style="font-size:13px;color:#888780;text-align:right;margin-top:8px;min-height:18px;"></div>
+  `;
+  wrap.appendChild(div);
+  updateSummary();
+}
+
+function removeItem(id) {
+  document.getElementById(id)?.remove();
+  updateSummary();
+}
+
+function onTypeChange(id) {
+  const type = document.getElementById(`svc-${id}`).value;
+  const sz   = document.getElementById(`sz-${id}`);
+  sz.innerHTML = '<option value="">— เลือกขนาด —</option>';
+  if (type && RATES[type]) {
+    sz.disabled = false;
+    Object.entries(RATES[type].sizes).forEach(([k, v]) => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = `${SIZE_LABELS[k]}  —  ฿${v.toLocaleString()}`;
+      sz.appendChild(o);
+    });
+  } else {
+    sz.disabled = true;
+  }
+  updateSummary();
+}
+
+/* ─── COLLECT & CALC ─────────────────────────── */
+function collectItems() {
+  return [...document.querySelectorAll('[id^="row"]')].flatMap(row => {
+    const id   = row.id;
+    const type = document.getElementById(`svc-${id}`)?.value;
+    const size = document.getElementById(`sz-${id}`)?.value;
+    const qty  = Math.max(1, parseInt(document.getElementById(`qty-${id}`)?.value) || 1);
+
+    const lineEl = document.getElementById(`line-${id}`);
+    if (type && size && RATES[type]?.sizes[size]) {
+      const price = RATES[type].sizes[size];
+      const tot   = price * qty;
+      if (lineEl) { lineEl.textContent = `฿${price.toLocaleString()} × ${qty} = ฿${tot.toLocaleString()}`; lineEl.style.color = '#1A1A1A'; }
+      return [{ id, type, typeLabel: RATES[type].label, size, sizeLabel: SIZE_LABELS[size], unitPrice: price, qty, total: tot }];
+    } else {
+      if (lineEl) { lineEl.textContent = ''; }
+      return [];
+    }
+  });
+}
+
+function calc() {
+  const items   = collectItems();
+  const distFee = parseInt(document.getElementById('distance').value) || 0;
+  const sub     = items.reduce((s, i) => s + i.total, 0);
+  return { items, distFee, sub, grand: sub + distFee };
+}
+
+/* ─── SUMMARY PANEL ──────────────────────────── */
+function updateSummary() {
+  const { items, distFee, sub, grand } = calc();
+  const panel   = document.getElementById('summary-panel');
+  const empty   = document.getElementById('summary-empty');
+  const content = document.getElementById('summary-content');
+  const name    = document.getElementById('cust-name').value.trim();
+  const phone   = document.getElementById('cust-phone').value.trim();
+  const date    = document.getElementById('svc-date').value;
+  const time    = document.getElementById('svc-time').value;
+
+  if (items.length === 0) {
+    panel.className = 'card-dashed lg:sticky lg:top-6';
+    empty.classList.remove('hidden');
+    content.classList.add('hidden');
+    return;
+  }
+
+  panel.className = 'card lg:sticky lg:top-6';
+  empty.classList.add('hidden');
+  content.classList.remove('hidden');
+
+  const rows = items.map(i => `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);">
+      <div>
+        <div style="font-size:13px;font-weight:500;">${i.typeLabel}</div>
+        <div style="font-size:12px;color:#888780;">${i.sizeLabel} × ${i.qty}</div>
+      </div>
+      <div style="font-size:13px;font-weight:500;white-space:nowrap;padding-left:12px;">฿${i.total.toLocaleString()}</div>
+    </div>`).join('');
+
+  content.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <span style="font-size:18px;font-weight:600;">สรุปค่าบริการ</span>
+    </div>
+
+    ${name ? `<div style="background:rgb(249,249,247);border-radius:8px;padding:10px 12px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:500;">${esc(name)}</div>
+      ${phone ? `<div style="font-size:12px;color:#888780;">${esc(phone)}</div>` : ''}
+      ${date  ? `<div style="font-size:12px;color:#888780;margin-top:4px;">📅 ${thDate(date)}${time ? ' เวลา '+time+' น.' : ''}</div>` : ''}
+    </div>` : ''}
+
+    <div style="margin-bottom:16px;">${rows}</div>
+
+    <div style="border-top:1px solid rgba(0,0,0,.08);padding-top:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#888780;margin-bottom:5px;">
+        <span>ค่าบริการรวม</span><span>฿${sub.toLocaleString()}</span>
+      </div>
+      ${distFee ? `<div style="display:flex;justify-content:space-between;font-size:13px;color:#888780;margin-bottom:5px;">
+        <span>ค่าเดินทาง (${DIST_LABELS[distFee]})</span><span>฿${distFee.toLocaleString()}</span>
+      </div>` : ''}
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#1A1A1A;border-top:1px solid rgba(0,0,0,.1);padding-top:10px;margin-top:4px;">
+        <span>รวมทั้งหมด</span><span>฿${grand.toLocaleString()}</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ─── QUOTE GENERATION ───────────────────────── */
+function generateQuote() {
+  const { items, distFee, sub, grand } = calc();
+  if (items.length === 0) { alert('กรุณาเลือกรายการบริการอย่างน้อย 1 รายการ'); return; }
+
+  const name  = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  if (!name)  { alert('กรุณากรอกชื่อ–นามสกุลลูกค้า'); document.getElementById('cust-name').focus(); return; }
+  if (!phone) { alert('กรุณากรอกเบอร์โทรศัพท์');      document.getElementById('cust-phone').focus(); return; }
+
+  const addr  = document.getElementById('cust-addr').value.trim();
+  const date  = document.getElementById('svc-date').value;
+  const time  = document.getElementById('svc-time').value;
+  const notes = document.getElementById('notes').value.trim();
+  const bkNo  = bookingNo();
+  const now   = new Date();
+  const issuedStr = `${thDate(now.toISOString().slice(0,10))} เวลา ${pad(now.getHours())}:${pad(now.getMinutes())} น.`;
+  const distLabel = DIST_LABELS[String(distFee)] || '—';
+
+  /* item rows */
+  const trows = items.map((i, n) => `
+    <tr>
+      <td style="padding:9px 8px;font-size:13px;color:#888780;text-align:center;">${n+1}</td>
+      <td style="padding:9px 8px;font-size:13px;">${i.typeLabel}</td>
+      <td style="padding:9px 8px;font-size:13px;">${i.sizeLabel}</td>
+      <td style="padding:9px 8px;font-size:13px;text-align:center;">${i.qty}</td>
+      <td style="padding:9px 8px;font-size:13px;text-align:right;">฿${i.unitPrice.toLocaleString()}</td>
+      <td style="padding:9px 8px;font-size:13px;font-weight:500;text-align:right;">฿${i.total.toLocaleString()}</td>
+    </tr>`).join('') + (distFee ? `
+    <tr>
+      <td style="padding:9px 8px;font-size:13px;color:#888780;text-align:center;">${items.length+1}</td>
+      <td style="padding:9px 8px;font-size:13px;" colspan="2">ค่าเดินทาง (${distLabel})</td>
+      <td style="padding:9px 8px;font-size:13px;text-align:center;">1</td>
+      <td style="padding:9px 8px;font-size:13px;text-align:right;">฿${distFee.toLocaleString()}</td>
+      <td style="padding:9px 8px;font-size:13px;font-weight:500;text-align:right;">฿${distFee.toLocaleString()}</td>
+    </tr>` : '');
+
+  document.getElementById('quote-print-area').innerHTML = `
+  <div style="font-family:'Inter',system-ui,sans-serif;color:#1A1A1A;">
+
+    <!-- Letterhead -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="9" rx="2"/><path d="M12 12v9M9 21h6"/>
+            <circle cx="6.5" cy="7.5" r=".8" fill="#1A1A1A"/><circle cx="9.5" cy="7.5" r=".8" fill="#1A1A1A"/>
+          </svg>
+          <span style="font-size:22px;font-weight:700;">ACService</span>
+        </div>
+        <div style="font-size:12px;color:#888780;">ล้าง &middot; ซ่อม &middot; ติดตั้งแอร์</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:20px;font-weight:700;margin-bottom:4px;">ใบเสนอราคา</div>
+        <div style="font-size:13px;color:#888780;">เลขที่ <span style="color:#1A1A1A;font-weight:600;">${bkNo}</span></div>
+        <div style="font-size:12px;color:#888780;margin-top:2px;">ออกเมื่อ ${issuedStr}</div>
+      </div>
+    </div>
+
+    <div style="border-top:1.5px solid #1A1A1A;margin-bottom:24px;"></div>
+
+    <!-- Customer + Appointment -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">ข้อมูลลูกค้า</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:2px;">${esc(name)}</div>
+        <div style="font-size:13px;color:#888780;">${esc(phone)}</div>
+        ${addr ? `<div style="font-size:13px;color:#888780;margin-top:6px;line-height:1.55;">${esc(addr)}</div>` : ''}
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">วันเวลานัดหมาย</div>
+        ${date
+          ? `<div style="font-size:15px;font-weight:600;margin-bottom:2px;">${thDate(date)}</div>
+             <div style="font-size:13px;color:#888780;">${time ? 'เวลา '+time+' น.' : 'ยังไม่ระบุเวลา'}</div>`
+          : `<div style="font-size:13px;color:#888780;">ยังไม่ระบุวันที่</div>`}
+        ${distFee ? `<div style="font-size:13px;color:#888780;margin-top:6px;">ระยะทาง: ${distLabel}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Items table -->
+    <div style="margin-bottom:24px;overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:rgb(249,249,247);">
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:center;width:36px;">#</th>
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:left;">บริการ</th>
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:left;">ขนาด</th>
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:center;">จำนวน</th>
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:right;">ราคา/หน่วย</th>
+            <th style="padding:9px 8px;font-size:12px;font-weight:500;color:#888780;text-align:right;">รวม</th>
+          </tr>
+        </thead>
+        <tbody style="border-top:1px solid rgba(0,0,0,.1);">${trows}</tbody>
+      </table>
+    </div>
+
+    <!-- Totals -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:28px;">
+      <div style="min-width:240px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#888780;padding:5px 0;">
+          <span>ค่าบริการรวม</span><span>฿${sub.toLocaleString()}</span>
+        </div>
+        ${distFee ? `<div style="display:flex;justify-content:space-between;font-size:13px;color:#888780;padding:5px 0;">
+          <span>ค่าเดินทาง</span><span>฿${distFee.toLocaleString()}</span>
+        </div>` : ''}
+        <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#1A1A1A;border-top:2px solid #1A1A1A;padding-top:10px;margin-top:6px;">
+          <span>ยอดรวมทั้งหมด</span><span>฿${grand.toLocaleString()}</span>
+        </div>
+      </div>
+    </div>
+
+    ${notes ? `<div style="background:rgb(249,249,247);border-radius:8px;padding:12px 16px;margin-bottom:24px;">
+      <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">หมายเหตุ</div>
+      <div style="font-size:13px;line-height:1.55;">${esc(notes)}</div>
+    </div>` : ''}
+
+    <!-- Signature area -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px;margin-bottom:8px;">
+      <div style="text-align:center;">
+        <div style="border-top:1px solid rgba(0,0,0,.15);padding-top:8px;font-size:12px;color:#888780;">ลายเซ็นผู้รับบริการ / วันที่</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="border-top:1px solid rgba(0,0,0,.15);padding-top:8px;font-size:12px;color:#888780;">ลายเซ็นพนักงาน / วันที่</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="border-top:1px solid rgba(0,0,0,.08);margin-top:24px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:12px;color:#888780;">ACService — บริการล้าง ซ่อม ติดตั้งแอร์</div>
+      <div style="font-size:12px;color:#888780;">เลขที่ ${bkNo}</div>
+    </div>
+
+  </div>`;
+
+  document.getElementById('quote-overlay').classList.remove('hidden');
+}
+
+function closeQuote() { document.getElementById('quote-overlay').classList.add('hidden'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('quote-overlay')) closeQuote(); }
+function printQuote() { window.print(); }
+
+function resetForm() {
+  if (!confirm('ต้องการรีเซ็ตข้อมูลทั้งหมดใช่ไหม?')) return;
+  document.getElementById('items-wrap').innerHTML = '';
+  ['distance','cust-name','cust-phone','cust-addr','svc-time','notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  seq = 0;
+  document.getElementById('svc-date').value = new Date().toISOString().slice(0,10);
+  addItem();
+}
+
+/* ─── UTILS ──────────────────────────────────── */
+function thDate(str) {
+  if (!str) return '';
+  const [y,m,d] = str.split('-').map(Number);
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${d} ${months[m-1]} ${y + 543}`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+function bookingNo() {
+  const n = new Date();
+  return `AC${String(n.getFullYear()).slice(-2)}${pad(n.getMonth()+1)}${pad(n.getDate())}-${Math.floor(1000+Math.random()*9000)}`;
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
