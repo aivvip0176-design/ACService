@@ -14,172 +14,104 @@
       theme: {
         extend: {
           colors: {
-            canvas:  'rgb(249, 249, 247)',
-            ink:     '#1A1A1A',
-            muted:   '#888780',
-            accent:  '#F1EFE8',
-            border:  'rgba(0,0,0,0.12)',
+            canvas: 'rgb(249, 249, 247)',
+            ink:    '#1A1A1A',
+            muted:  '#888780',
+            accent: '#F1EFE8',
           },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Inter','system-ui','-apple-system','sans-serif'] },
         }
       }
     }
   </script>
 
   <style>
-    /* ── Base ── */
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: rgb(249, 249, 247);
-      -webkit-font-smoothing: antialiased;
-      color: #1A1A1A;
-    }
+    body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:rgb(249,249,247); -webkit-font-smoothing:antialiased; color:#1A1A1A; }
 
-    /* ── Inputs & Selects ── */
-    .field {
-      width: 100%;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.12);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      font-family: inherit;
-      color: #1A1A1A;
-      outline: none;
-      transition: box-shadow .15s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .field::placeholder { color: #888780; }
-    .field:focus { box-shadow: 0 0 0 2px #1A1A1A; }
-    .field:disabled { background: rgb(249,249,247); cursor: not-allowed; }
+    .field { width:100%; background:#fff; border:1px solid rgba(0,0,0,.12); border-radius:8px; padding:8px 12px; font-size:14px; font-family:inherit; color:#1A1A1A; outline:none; transition:box-shadow .15s; appearance:none; -webkit-appearance:none; }
+    .field::placeholder { color:#888780; }
+    .field:focus { box-shadow:0 0 0 2px #1A1A1A; }
+    .field:disabled { background:rgb(249,249,247); cursor:not-allowed; }
+    select.field { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; }
+    textarea.field { resize:vertical; }
 
-    select.field {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 32px;
-    }
+    .btn-primary { background:#1A1A1A; color:#fff; border:none; border-radius:8px; padding:10px 32px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; transition:opacity .15s; display:inline-flex; align-items:center; gap:8px; }
+    .btn-primary:hover { opacity:.82; }
+    .btn-primary:focus { outline:2px solid #1A1A1A; outline-offset:2px; }
 
-    textarea.field { resize: vertical; }
+    .btn-secondary { background:#fff; color:#1A1A1A; border:1px solid rgba(0,0,0,.12); border-radius:8px; padding:10px 24px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; transition:background .15s; display:inline-flex; align-items:center; gap:8px; }
+    .btn-secondary:hover { background:#F1EFE8; }
+    .btn-secondary:focus { outline:2px solid #1A1A1A; outline-offset:2px; }
 
-    /* ── Buttons ── */
-    .btn-primary {
-      background: #1A1A1A; color: #fff;
-      border: none; border-radius: 8px;
-      padding: 10px 32px;
-      font-size: 14px; font-weight: 500; font-family: inherit;
-      cursor: pointer; transition: opacity .15s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover { opacity: .82; }
-    .btn-primary:focus { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.10); padding:24px; }
+    .card-dashed { background:transparent; border:1px dashed rgba(0,0,0,.15); border-radius:12px; padding:24px; }
+    .service-row { background:rgb(249,249,247); border:1px dashed rgba(0,0,0,.10); border-radius:10px; padding:16px; }
 
-    .btn-secondary {
-      background: #fff; color: #1A1A1A;
-      border: 1px solid rgba(0,0,0,0.12); border-radius: 8px;
-      padding: 10px 24px;
-      font-size: 14px; font-weight: 500; font-family: inherit;
-      cursor: pointer; transition: background .15s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-secondary:hover { background: #F1EFE8; }
-    .btn-secondary:focus { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+    label { display:block; font-size:14px; font-weight:500; color:#1A1A1A; margin-bottom:6px; }
 
-    /* ── Cards ── */
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.10);
-      padding: 24px;
-    }
-    .card-dashed {
-      background: transparent;
-      border: 1px dashed rgba(0,0,0,.15);
-      border-radius: 12px;
-      padding: 24px;
-    }
+    /* Modal */
+    #quote-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; z-index:50; padding:16px; }
+    #quote-overlay.open { display:flex; }
+    #quote-modal { background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.2); max-width:700px; width:100%; max-height:92vh; overflow-y:auto; }
 
-    /* ── Service row ── */
-    .service-row {
-      background: rgb(249,249,247);
-      border: 1px dashed rgba(0,0,0,.10);
-      border-radius: 10px;
-      padding: 16px;
-    }
+    /* Spin animation for loading */
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .spin { animation:spin .8s linear infinite; display:inline-block; }
 
-    /* ── Labels ── */
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: #1A1A1A;
-      margin-bottom: 6px;
-    }
-
-    /* ── Modal overlay ── */
-    #quote-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.45);
-      align-items: center; justify-content: center;
-      z-index: 50; padding: 16px;
-    }
-    #quote-overlay.open { display: flex; }
-    #quote-modal {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.2);
-      max-width: 700px; width: 100%;
-      max-height: 92vh; overflow-y: auto;
-    }
-
-    /* ── Print handled via popup window — no @media print needed ── */
+    /* Price status pill */
+    #price-status { display:inline-flex; align-items:center; gap:5px; font-size:12px; }
   </style>
 </head>
 
 <body class="min-h-screen">
-
-<!-- ════════════════════════════════════════════════
-     APP SHELL
-════════════════════════════════════════════════ -->
 <div class="max-w-6xl mx-auto px-4 py-10">
 
   <!-- Header -->
   <header class="mb-8">
     <div class="flex items-center gap-3 mb-1">
-      <!-- AC icon -->
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="9" rx="2"/>
         <path d="M12 12v9M9 21h6"/>
         <circle cx="6.5" cy="7.5" r=".8" fill="#1A1A1A"/>
         <circle cx="9.5" cy="7.5" r=".8" fill="#1A1A1A"/>
       </svg>
-      <h1 style="font-size:23px;font-weight:600;color:#1A1A1A;">ACService</h1>
+      <h1 style="font-size:23px;font-weight:600;">ACService</h1>
     </div>
     <p style="font-size:14px;color:#888780;">ระบบคำนวณค่าบริการแอร์ — ล้าง &middot; ซ่อม &middot; ติดตั้ง</p>
+
+    <!-- Price status bar -->
+    <div class="flex items-center gap-3 mt-3">
+      <div id="price-status" style="color:#888780;">
+        <svg class="spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span>กำลังโหลดราคาจาก Google Sheets...</span>
+      </div>
+      <button onclick="loadPrices()" id="refresh-btn"
+        style="font-size:12px;color:#888780;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;"
+        title="รีเฟรชราคา">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-3.7"/>
+        </svg>
+        รีเฟรช
+      </button>
+    </div>
   </header>
 
-  <!-- Grid: Form (3) + Summary (2) -->
+  <!-- Grid -->
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
 
-    <!-- ── FORM COLUMN ── -->
-    <div class="lg:col-span-3 space-y-5 no-print">
+    <!-- FORM -->
+    <div class="lg:col-span-3 space-y-5">
 
-      <!-- 1. Service Items -->
+      <!-- Service Items -->
       <div class="card">
         <div class="flex items-center gap-2 mb-5">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <path d="M3 9h18M9 21V9"/>
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
           </svg>
           <h2 style="font-size:18px;font-weight:600;">รายการบริการ</h2>
         </div>
-
         <div id="items-wrap" class="space-y-3"></div>
-
         <button onclick="addItem()" class="btn-secondary mt-4 w-full justify-center">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -188,12 +120,11 @@
         </button>
       </div>
 
-      <!-- 2. Distance -->
+      <!-- Distance -->
       <div class="card">
         <div class="flex items-center gap-2 mb-5">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            <circle cx="12" cy="9" r="2.5"/>
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
           </svg>
           <h2 style="font-size:18px;font-weight:600;">ระยะทางและค่าเดินทาง</h2>
         </div>
@@ -208,16 +139,14 @@
         </select>
       </div>
 
-      <!-- 3. Customer Info -->
+      <!-- Customer Info -->
       <div class="card">
         <div class="flex items-center gap-2 mb-5">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
           <h2 style="font-size:18px;font-weight:600;">ข้อมูลลูกค้า</h2>
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label for="cust-name">ชื่อ–นามสกุล <span style="color:#888780;font-weight:400;">*</span></label>
@@ -253,28 +182,24 @@
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
             <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
           </svg>
           คำนวณและออกใบเสนอราคา
         </button>
         <button onclick="resetForm()" class="btn-secondary">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="1 4 1 10 7 10"/>
-            <path d="M3.51 15a9 9 0 1 0 .49-3.7"/>
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.7"/>
           </svg>
           รีเซ็ต
         </button>
       </div>
+    </div><!-- /form -->
 
-    </div><!-- /form col -->
-
-    <!-- ── SUMMARY SIDEBAR ── -->
-    <div class="lg:col-span-2 no-print">
+    <!-- SUMMARY -->
+    <div class="lg:col-span-2">
       <div id="summary-panel" class="card-dashed lg:sticky lg:top-6">
         <div id="summary-empty" class="py-6 flex flex-col items-center gap-3">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#888780" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="9" rx="2"/>
-            <path d="M12 12v9M9 21h6"/>
+            <rect x="2" y="3" width="20" height="9" rx="2"/><path d="M12 12v9M9 21h6"/>
           </svg>
           <p style="font-size:14px;color:#888780;text-align:center;">กรอกข้อมูลเพื่อดูสรุปค่าบริการ</p>
         </div>
@@ -282,17 +207,15 @@
       </div>
     </div>
 
-  </div><!-- /grid -->
+  </div>
 </div><!-- /shell -->
 
 
-<!-- ════════════════════════════════════════════════
-     QUOTE MODAL
-════════════════════════════════════════════════ -->
-<div id="quote-overlay" class="no-print" onclick="handleOverlayClick(event)">
+<!-- QUOTE MODAL -->
+<div id="quote-overlay" onclick="handleOverlayClick(event)">
   <div id="quote-modal">
     <div id="quote-print-area" class="p-8"></div>
-    <div class="flex flex-wrap gap-3 px-8 py-5 border-t no-print" style="border-color:rgba(0,0,0,0.08);">
+    <div class="flex flex-wrap gap-3 px-8 py-5 border-t" style="border-color:rgba(0,0,0,.08);">
       <button onclick="printQuote()" class="btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 6 2 18 2 18 9"/>
@@ -307,46 +230,135 @@
 </div>
 
 
-<!-- ════════════════════════════════════════════════
-     SCRIPT
-════════════════════════════════════════════════ -->
 <script>
-/* ─── RATES ─────────────────────────────────── */
-const RATES = {
-  wash:    { label: 'ล้างแอร์',     sizes: { '9000':500,  '12000':600,  '18000':800,  '24000':1000 } },
-  repair:  { label: 'ซ่อมแอร์',    sizes: { '9000':1200, '12000':1500, '18000':2000, '24000':2500 } },
-  install: { label: 'ติดตั้งแอร์', sizes: { '9000':2500, '12000':3000, '18000':4000, '24000':5000 } },
-};
-const SIZE_LABELS = {
-  '9000':  '9,000 BTU (เล็ก)',
-  '12000': '12,000 BTU (กลาง)',
-  '18000': '18,000 BTU (ใหญ่)',
-  '24000': '24,000 BTU (ใหญ่พิเศษ)',
-};
-const DIST_LABELS = {
-  '100': '0–10 กม.',
-  '200': '11–20 กม.',
-  '300': '21–30 กม.',
-  '500': '31–50 กม.',
-  '800': '51 กม. ขึ้นไป',
+/* ═══════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════ */
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTU4A9efzoZF7PvdFiu6Ddh30xyvToA5dKTBqvHckWwrepI9wqZv4wmTKv-fqSnYZkHiZkCP1rSBa3J/pub?output=csv';
+
+/* Map first-column values (Thai/English) → internal key */
+const SVC_MAP = {
+  wash:'wash', 'ล้าง':'wash', 'ล้างแอร์':'wash',
+  repair:'repair', 'ซ่อม':'repair', 'ซ่อมแอร์':'repair',
+  install:'install', 'ติดตั้ง':'install', 'ติดตั้งแอร์':'install',
 };
 
-/* ─── STATE ──────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   DYNAMIC DATA (populated from Sheet)
+═══════════════════════════════════════════ */
+let RATES = {
+  wash:    { label:'ล้างแอร์',     sizes:{} },
+  repair:  { label:'ซ่อมแอร์',    sizes:{} },
+  install: { label:'ติดตั้งแอร์', sizes:{} },
+};
+let SIZE_LABELS = {};   /* e.g. { '9000': '9,000 BTU' } */
+
+const DIST_LABELS = {
+  '100':'0–10 กม.', '200':'11–20 กม.', '300':'21–30 กม.',
+  '500':'31–50 กม.', '800':'51 กม. ขึ้นไป',
+};
+
 let seq = 0;
 
-/* ─── INIT ───────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   PRICE LOADER
+═══════════════════════════════════════════ */
+async function loadPrices() {
+  setStatus('loading');
+  try {
+    const res = await fetch(SHEET_CSV + '&_=' + Date.now(), { cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    applyCSV(parseCSV(text));
+    setStatus('ok');
+  } catch (e) {
+    console.warn('[ACService] Sheet error:', e.message);
+    setStatus('error');
+  }
+}
+
+function parseCSV(text) {
+  return text.replace(/\r/g, '').split('\n')
+    .filter(l => l.trim())
+    .map(line => {
+      const cols = []; let cur = '', inQ = false;
+      for (const ch of line + ',') {
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+      return cols;
+    });
+}
+
+function applyCSV(rows) {
+  if (rows.length < 2) return;
+
+  /* Row 0 = header: [label, btu1, btu2, ...] */
+  const btuCols = rows[0].slice(1).map(h => h.trim()).filter(Boolean);
+
+  /* Build SIZE_LABELS */
+  SIZE_LABELS = {};
+  btuCols.forEach(btu => {
+    const n = parseInt(btu.replace(/\D/g, ''));
+    SIZE_LABELS[btu] = n ? n.toLocaleString() + ' BTU' : btu;
+  });
+
+  /* Reset sizes */
+  Object.keys(RATES).forEach(k => RATES[k].sizes = {});
+
+  /* Fill prices */
+  rows.slice(1).forEach(row => {
+    const raw = (row[0] || '').trim();
+    const key = SVC_MAP[raw] || SVC_MAP[raw.toLowerCase()];
+    if (!key) return;
+    btuCols.forEach((btu, i) => {
+      const price = parseInt((row[i + 1] || '').replace(/\D/g, ''));
+      if (price > 0) RATES[key].sizes[btu] = price;
+    });
+  });
+
+  /* Refresh all open size dropdowns, keep current selection */
+  document.querySelectorAll('[id^="row"]').forEach(rowEl => {
+    const id = rowEl.id;
+    const type = document.getElementById('svc-' + id)?.value;
+    if (type) onTypeChange(id, true);
+  });
+  updateSummary();
+}
+
+function setStatus(state) {
+  const el = document.getElementById('price-status');
+  if (!el) return;
+  const t = `${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`;
+  const icon = {
+    loading: `<svg class="spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888780" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`,
+    ok:      `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    error:   `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  }[state];
+  const msg = {
+    loading: 'กำลังโหลดราคาจาก Google Sheets...',
+    ok:      `ราคาจาก Google Sheets · อัปเดต ${t} น.`,
+    error:   'โหลดราคาไม่ได้ — กรุณาตรวจสอบการ publish ของ Sheet',
+  }[state];
+  el.innerHTML = icon + `<span>${msg}</span>`;
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('svc-date').value = new Date().toISOString().slice(0, 10);
   addItem();
-  const today = new Date().toISOString().slice(0,10);
-  document.getElementById('svc-date').value = today;
+  loadPrices();
 });
 
-/* ─── ADD / REMOVE ITEM ──────────────────────── */
+/* ═══════════════════════════════════════════
+   SERVICE ITEM ROWS
+═══════════════════════════════════════════ */
 function addItem() {
   seq++;
   const id = `row${seq}`;
-  const wrap = document.getElementById('items-wrap');
-
   const div = document.createElement('div');
   div.id = id;
   div.className = 'service-row';
@@ -354,9 +366,11 @@ function addItem() {
     <div class="flex items-center justify-between mb-3">
       <span style="font-size:13px;font-weight:500;color:#888780;">รายการที่ ${seq}</span>
       ${seq > 1
-        ? `<button onclick="removeItem('${id}')" style="font-size:12px;color:#888780;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
-             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>ลบ
-           </button>`
+        ? `<button onclick="removeItem('${id}')"
+             style="font-size:12px;color:#888780;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
+             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+             </svg>ลบ</button>`
         : ''}
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -383,7 +397,7 @@ function addItem() {
     </div>
     <div id="line-${id}" style="font-size:13px;color:#888780;text-align:right;margin-top:8px;min-height:18px;"></div>
   `;
-  wrap.appendChild(div);
+  document.getElementById('items-wrap').appendChild(div);
   updateSummary();
 }
 
@@ -392,42 +406,55 @@ function removeItem(id) {
   updateSummary();
 }
 
-function onTypeChange(id) {
-  const type = document.getElementById(`svc-${id}`).value;
-  const sz   = document.getElementById(`sz-${id}`);
-  sz.innerHTML = '<option value="">— เลือกขนาด —</option>';
-  if (type && RATES[type]) {
-    sz.disabled = false;
-    Object.entries(RATES[type].sizes).forEach(([k, v]) => {
+function onTypeChange(id, keepSelection = false) {
+  const type  = document.getElementById(`svc-${id}`).value;
+  const szEl  = document.getElementById(`sz-${id}`);
+  const prev  = keepSelection ? szEl.value : '';
+
+  szEl.innerHTML = '<option value="">— เลือกขนาด —</option>';
+
+  if (type && RATES[type] && Object.keys(RATES[type].sizes).length > 0) {
+    szEl.disabled = false;
+    Object.entries(RATES[type].sizes).forEach(([btu, price]) => {
       const o = document.createElement('option');
-      o.value = k;
-      o.textContent = `${SIZE_LABELS[k]}  —  ฿${v.toLocaleString()}`;
-      sz.appendChild(o);
+      o.value = btu;
+      o.textContent = `${SIZE_LABELS[btu] || btu}  —  ฿${price.toLocaleString()}`;
+      szEl.appendChild(o);
     });
+    if (prev) szEl.value = prev;
+  } else if (type) {
+    /* Prices not loaded yet */
+    szEl.disabled = false;
+    const o = document.createElement('option');
+    o.value = '';
+    o.textContent = 'กำลังโหลดราคา...';
+    szEl.appendChild(o);
   } else {
-    sz.disabled = true;
+    szEl.disabled = true;
   }
   updateSummary();
 }
 
-/* ─── COLLECT & CALC ─────────────────────────── */
+/* ═══════════════════════════════════════════
+   CALCULATION
+═══════════════════════════════════════════ */
 function collectItems() {
-  return [...document.querySelectorAll('[id^="row"]')].flatMap(row => {
-    const id   = row.id;
+  return [...document.querySelectorAll('[id^="row"]')].flatMap(rowEl => {
+    const id   = rowEl.id;
     const type = document.getElementById(`svc-${id}`)?.value;
     const size = document.getElementById(`sz-${id}`)?.value;
     const qty  = Math.max(1, parseInt(document.getElementById(`qty-${id}`)?.value) || 1);
-
     const lineEl = document.getElementById(`line-${id}`);
+
     if (type && size && RATES[type]?.sizes[size]) {
       const price = RATES[type].sizes[size];
       const tot   = price * qty;
       if (lineEl) { lineEl.textContent = `฿${price.toLocaleString()} × ${qty} = ฿${tot.toLocaleString()}`; lineEl.style.color = '#1A1A1A'; }
-      return [{ id, type, typeLabel: RATES[type].label, size, sizeLabel: SIZE_LABELS[size], unitPrice: price, qty, total: tot }];
-    } else {
-      if (lineEl) { lineEl.textContent = ''; }
-      return [];
+      return [{ id, type, typeLabel: RATES[type].label, size,
+                sizeLabel: SIZE_LABELS[size] || size, unitPrice: price, qty, total: tot }];
     }
+    if (lineEl) lineEl.textContent = '';
+    return [];
   });
 }
 
@@ -438,7 +465,9 @@ function calc() {
   return { items, distFee, sub, grand: sub + distFee };
 }
 
-/* ─── SUMMARY PANEL ──────────────────────────── */
+/* ═══════════════════════════════════════════
+   SUMMARY PANEL
+═══════════════════════════════════════════ */
 function updateSummary() {
   const { items, distFee, sub, grand } = calc();
   const panel   = document.getElementById('summary-panel');
@@ -495,11 +524,12 @@ function updateSummary() {
       <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#1A1A1A;border-top:1px solid rgba(0,0,0,.1);padding-top:10px;margin-top:4px;">
         <span>รวมทั้งหมด</span><span>฿${grand.toLocaleString()}</span>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-/* ─── QUOTE GENERATION ───────────────────────── */
+/* ═══════════════════════════════════════════
+   QUOTE GENERATION
+═══════════════════════════════════════════ */
 function generateQuote() {
   const { items, distFee, sub, grand } = calc();
   if (items.length === 0) { alert('กรุณาเลือกรายการบริการอย่างน้อย 1 รายการ'); return; }
@@ -507,7 +537,7 @@ function generateQuote() {
   const name  = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   if (!name)  { alert('กรุณากรอกชื่อ–นามสกุลลูกค้า'); document.getElementById('cust-name').focus(); return; }
-  if (!phone) { alert('กรุณากรอกเบอร์โทรศัพท์');      document.getElementById('cust-phone').focus(); return; }
+  if (!phone) { alert('กรุณากรอกเบอร์โทรศัพท์'); document.getElementById('cust-phone').focus(); return; }
 
   const addr  = document.getElementById('cust-addr').value.trim();
   const date  = document.getElementById('svc-date').value;
@@ -515,10 +545,9 @@ function generateQuote() {
   const notes = document.getElementById('notes').value.trim();
   const bkNo  = bookingNo();
   const now   = new Date();
-  const issuedStr = `${thDate(now.toISOString().slice(0,10))} เวลา ${pad(now.getHours())}:${pad(now.getMinutes())} น.`;
+  const issued = `${thDate(now.toISOString().slice(0,10))} เวลา ${pad(now.getHours())}:${pad(now.getMinutes())} น.`;
   const distLabel = DIST_LABELS[String(distFee)] || '—';
 
-  /* item rows */
   const trows = items.map((i, n) => `
     <tr>
       <td style="padding:9px 8px;font-size:13px;color:#888780;text-align:center;">${n+1}</td>
@@ -538,8 +567,6 @@ function generateQuote() {
 
   document.getElementById('quote-print-area').innerHTML = `
   <div style="font-family:'Inter',system-ui,sans-serif;color:#1A1A1A;">
-
-    <!-- Letterhead -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:16px;">
       <div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
@@ -554,13 +581,12 @@ function generateQuote() {
       <div style="text-align:right;">
         <div style="font-size:20px;font-weight:700;margin-bottom:4px;">ใบเสนอราคา</div>
         <div style="font-size:13px;color:#888780;">เลขที่ <span style="color:#1A1A1A;font-weight:600;">${bkNo}</span></div>
-        <div style="font-size:12px;color:#888780;margin-top:2px;">ออกเมื่อ ${issuedStr}</div>
+        <div style="font-size:12px;color:#888780;margin-top:2px;">ออกเมื่อ ${issued}</div>
       </div>
     </div>
 
     <div style="border-top:1.5px solid #1A1A1A;margin-bottom:24px;"></div>
 
-    <!-- Customer + Appointment -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
       <div>
         <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">ข้อมูลลูกค้า</div>
@@ -578,7 +604,6 @@ function generateQuote() {
       </div>
     </div>
 
-    <!-- Items table -->
     <div style="margin-bottom:24px;overflow-x:auto;">
       <table style="width:100%;border-collapse:collapse;">
         <thead>
@@ -595,7 +620,6 @@ function generateQuote() {
       </table>
     </div>
 
-    <!-- Totals -->
     <div style="display:flex;justify-content:flex-end;margin-bottom:28px;">
       <div style="min-width:240px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;color:#888780;padding:5px 0;">
@@ -615,7 +639,6 @@ function generateQuote() {
       <div style="font-size:13px;line-height:1.55;">${esc(notes)}</div>
     </div>` : ''}
 
-    <!-- Signature area -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px;margin-bottom:8px;">
       <div style="text-align:center;">
         <div style="border-top:1px solid rgba(0,0,0,.15);padding-top:8px;font-size:12px;color:#888780;">ลายเซ็นผู้รับบริการ / วันที่</div>
@@ -625,12 +648,10 @@ function generateQuote() {
       </div>
     </div>
 
-    <!-- Footer -->
     <div style="border-top:1px solid rgba(0,0,0,.08);margin-top:24px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div style="font-size:12px;color:#888780;">ACService — บริการล้าง ซ่อม ติดตั้งแอร์</div>
       <div style="font-size:12px;color:#888780;">เลขที่ ${bkNo}</div>
     </div>
-
   </div>`;
 
   document.getElementById('quote-overlay').classList.add('open');
@@ -639,10 +660,11 @@ function generateQuote() {
 function closeQuote() { document.getElementById('quote-overlay').classList.remove('open'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('quote-overlay')) closeQuote(); }
 
+/* ═══════════════════════════════════════════
+   PRINT (hidden iframe — no popup needed)
+═══════════════════════════════════════════ */
 function printQuote() {
   const content = document.getElementById('quote-print-area').innerHTML;
-
-  /* reuse or create hidden iframe */
   let frame = document.getElementById('print-frame');
   if (!frame) {
     frame = document.createElement('iframe');
@@ -650,48 +672,44 @@ function printQuote() {
     frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none;visibility:hidden;';
     document.body.appendChild(frame);
   }
-
   const doc = frame.contentDocument || frame.contentWindow.document;
   doc.open();
   doc.write(`<!DOCTYPE html>
-<html lang="th">
-<head>
+<html lang="th"><head>
   <meta charset="UTF-8">
   <title>ใบเสนอราคา — ACService</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *  { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, sans-serif; padding: 36px; color: #1A1A1A;
-           -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    table { width: 100%; border-collapse: collapse; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;padding:36px;color:#1A1A1A;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    table{width:100%;border-collapse:collapse}
   </style>
-</head>
-<body>${content}</body>
-</html>`);
+</head><body>${content}</body></html>`);
   doc.close();
-
-  /* wait for font then print */
   setTimeout(() => { frame.contentWindow.focus(); frame.contentWindow.print(); }, 900);
 }
 
+/* ═══════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════ */
 function resetForm() {
   if (!confirm('ต้องการรีเซ็ตข้อมูลทั้งหมดใช่ไหม?')) return;
   document.getElementById('items-wrap').innerHTML = '';
   ['distance','cust-name','cust-phone','cust-addr','svc-time','notes'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+    const el = document.getElementById(id); if (el) el.value = '';
   });
   seq = 0;
-  document.getElementById('svc-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('svc-date').value = new Date().toISOString().slice(0, 10);
   addItem();
 }
 
-/* ─── UTILS ──────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
 function thDate(str) {
   if (!str) return '';
   const [y,m,d] = str.split('-').map(Number);
-  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  return `${d} ${months[m-1]} ${y + 543}`;
+  return `${d} ${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]} ${y+543}`;
 }
 function pad(n) { return String(n).padStart(2,'0'); }
 function bookingNo() {
